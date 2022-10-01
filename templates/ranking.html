@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Autor</th>
+        <th scope="col">Libro</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ranking in lista %}
+      <tr>
+        <th scope="row">{{loop.index}}</th>
+        <td>{{ranking.codigoAutor}}</td>
+        <td>{{ranking.codigoLibros}}</td>
+      </tr>
+      {% endfor %} 
+    </tbody>
+  </table>
+{% endblock %}

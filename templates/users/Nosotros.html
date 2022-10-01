@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Libreria Lopes</title>
+  <link rel="stylesheet" href="/static/Estilos/elEstilo.css" type="text/css">
+  <link rel="icon" href="/static/image/libroParaIcon.jfif">
+</head>
+<body>
+  <div class="row">
+    <div class="container textoEnvio">
+      <p>Envios gratuitos a toda Argentina a partir de compras mayores a $3499</p>
+    </div>
+  <div class="row">
+  <div class="row logo-container">
+    <img class="img-responsive" src="/static/image/Libreria Lopes Ferrao.gif " alt="Libreria Lopes Ferrao">
+  </div>
+</div>
+</div>
+<div id="elMenu">
+  <ul  class="col-xs-12" id="menuhorizontal">    
+    <li><a href="../SegundoParcial.html">Inicio</a></li>
+    <li><a href="#empresa">Nosotros</a></li>
+    <li><a href="./Contacto.html">Contacto</a></li>
+    </ul>
+    <br>
+    <br>
+  </div>
+      <div class="empresa">
+        <h2 id="titulos" style="text-align: center;">Nosotros</h2> 
+      <h3>Quienes somos</h3>
+        <p>La familia tiene una experiencia de mas de 30 años en la venta de libros. Nacimos a principios de la década del 90.
+          Somos una empresa con una basta experiencia en la comercialización de cómics.
+           Comenzamos con un pequeño kiosco de revistas pero en muy poco tiempo crecimos y nos dedicamos a distribuir mangas. 
+           Nos transformamos en el mayorista más importante de este sector. Nos siguen eligiendo ya que nos asentamos sobre tres pilares:</p>
+           <h3>Responsabilidad</h3>
+           <p>Nuestro objetivo es que una persona se forme como un buen lector por lo que siempre estamos dispuestos a resolver preguntas y dudas.</p>
+           <h3>Precios accesibles</h3>
+           <p> Damos una importancia al precio de nuestros productos, por esa razon disponemos de ofertas semanales, mensuales asi como de promociones con tarjetas de creditos en hasta 18 cuotas.</p>
+           <h3>Disponibilidad</h3>
+           <p> Fuimos elegidos por la Academia nacional de libros como la mayor libreria de la nacion con mas de treinta mil libros disponibles.</p>
+      </div>
+      </div>
+        </div>    
+      </div>
+      <!-- recuerda que para que funcione el centrado vertical el contenedor debe tener
+      un tamaño estatico -->
+      <footer class="pie-pagina">
+        <div class="grupo-1">
+          <div class="box">
+            <h2>Ubicacion</h2>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3283.427413850594!2d-58.63984068423242!3d-34.618637765795896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcb8d055e548bf%3A0x738f85ea67aeabe5!2sUNaHur.%20Universidad%20Nacional%20de%20Hurlingham!5e0!3m2!1ses!2sar!4v1657066838924!5m2!1ses!2sar" 
+            width="250" height="75" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+          <div class="metodosPago">
+          <p >Metodos de pago</p>
+          <img src="/static/image/visa.png"  class="icon-logo lazyloaded" alt="visa" width="40" height="25">
+          <img src="/static/image/mastercard.jpg"  class="icon-logo lazyloaded" alt="visa" width="40" height="25">
+          <img src="/static/image/santanderRio.jpg"  class="icon-logo lazyloaded" alt="visa" width="40" height="25">
+          <img src="/static/image/bancoNacion.jfif"  class="icon-logo lazyloaded" alt="visa" width="40" height="25">
+          <img src="/static/image/bancoProvincia.jfif"  class="icon-logo lazyloaded" alt="visa" width="40" height="25">
+        </div>
+        </div>
+        <div class="miNombreFinal">
+          <p >UNAMBA</p>
+          <p ><a href="mailto:pablo_lopesferrao@hotmail.com">Contactar</a></p>
+        </div>
+    </footer>
+</body>
+</html>
+{% endblock %}
