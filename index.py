@@ -10,10 +10,12 @@ from datetime import datetime
 app = Flask(__name__)
  
 #Add Database local
-#app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqldb://root:123456@localhost/proyectos"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:123456@localhost/proyectos"
 
 #Database concectado a Amazon WS
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqldb://Alex:Admin1234@44.202.81.95/examen"
+#app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://Alex:Admin1234@44.202.81.95/examen"
+
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 app.config['SECRET_KEY']='My super secret that no one is supposed to know'
 
@@ -27,7 +29,7 @@ class Autor(db.Model):
     nombre = db.Column(db.String(100), nullable=False)
     apellido = db.Column(db.String(100), nullable=False)
     fechaNacimiento = db.Column(db.DateTime)
-    fechFallecimiento = db.Column(db.DateTime)
+    fechFallecimiento = db.Column(db.DateTime) 
     lugarNacimiento = db.Column(db.String(100))
     ranking= db.relationship('Ranking', backref='autor', lazy=True)
 
@@ -50,7 +52,7 @@ class AutorForm(FlaskForm):
     nombreAutor =StringField('Nombre', validators=[DataRequired()])
     apellidoAutor =StringField('Apellido', validators=[DataRequired()])
     nacimientoAutor =DateField('Fecha de Nacimiento', validators=[DataRequired()])
-    fallecimientoAutor =DateField('Fecha de Fallecimiento', validators=[DataRequired()])
+    fallecimientoAutor =DateField('Fecha de Fallecimiento')
     lugarAutor =StringField('Lugar de Nacimiento', validators=[DataRequired()])
 
 class LibrosForm(FlaskForm):
@@ -78,7 +80,7 @@ def insertar():
             genero = form_libros.generoLibros.data, titulo = form_libros.tituloLibros.data)
             db.session.add(libros)
             db.session.commit()
-    else: return render_template('insertar.html',form_libros=form_libros, form_autor=form_autor)
+    else: return render_template('insertar.html', form_autor=form_autor)
     
     if form_autor.validate_on_submit():
         autor = Autor.query.filter_by(codigo = form_autor.codigoAutor.data).first()
@@ -89,10 +91,28 @@ def insertar():
             db.session.add(autor)
             db.session.commit()
         flash("Usuario añadido con exito")
-    else: return render_template('insertar.html',form_libros=form_libros, form_autor=form_autor)
-    libros_id = Libros.query.filter_by(codigo=libros.codigo).first().id
+    else: return render_template('insertar.html',form_libros=form_libros)
+
     autor_id = Autor.query.filter_by(codigo=autor.codigo).first().id
-    db.session.add(Ranking(libros_id=libros_id, autor_id=autor_id))
+    db.session.add(Ranking(autor_id=autor_id))
+    db.session.commit()
+    return redirect(url_for('ranking'))
+
+@app.route('/Libros')
+def libros():
+    form_libros = LibrosForm()
+    libros = None
+
+    if form_libros.validate_on_submit():
+        libros = Libros.query.filter_by(codigo = form_libros.codigoLibros.data).first()
+        if libros is None:
+            libros = Libros(codigo = form_libros.codigoLibros.data, fechaPublicacion = form_libros.fecPublicLibros.data,
+            genero = form_libros.generoLibros.data, titulo = form_libros.tituloLibros.data)
+            db.session.add(libros)
+            db.session.commit()
+    else: return render_template('libros.html',form_libros=form_libros)
+    libros_id = Libros.query.filter_by(codigo=libros.codigo).first().id
+    db.session.add(Ranking(libros_id=libros_id))
     db.session.commit()
     return redirect(url_for('ranking'))
 
@@ -117,7 +137,12 @@ def ranking():
         })
     return render_template('ranking.html',lista=lista)
 
+with app.app_context():
+    db.create_all()
 
+
+if __name__ == "__main__":
+    app.run(debug=True)
 
 
 
