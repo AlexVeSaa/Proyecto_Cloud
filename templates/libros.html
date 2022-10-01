@@ -15,8 +15,13 @@
     <h2>LIBRO</h2>
     <div class="row">
         <div class="col">
-            {{form_libros.codigoLibros.label(class="form-label") }}
-            {{form_libros.codigoLibros(class = "form-control")}}
+            <select class="form-control">
+                <option>
+                    {% for rangking in lista %}
+                    <option>{{ rangking.nombreAutor }}</option>
+                    {% endfor %}
+                </option>
+            </select>
         </div>
         <div class="col">
             {{form_libros.fecPublicLibros.label(class="form-label") }}
