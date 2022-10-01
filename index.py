@@ -10,10 +10,10 @@ from datetime import datetime
 app = Flask(__name__)
  
 #Add Database local
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqldb://root:123456@localhost/proyectos"
+#app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqldb://root:123456@localhost/proyectos"
 
 #Database concectado a Amazon WS
-#app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqldb://Alex:Admin1234@44.202.81.95/examen"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqldb://Alex:Admin1234@44.202.81.95/examen"
 
 app.config['SECRET_KEY']='My super secret that no one is supposed to know'
 
@@ -117,8 +117,7 @@ def ranking():
         })
     return render_template('ranking.html',lista=lista)
 
-if __name__ == '__main__':
-    app.run(debug=True,port=5000,host="0.0.0.0")
+
 
 
 
