@@ -10,7 +10,7 @@ from datetime import datetime
 app = Flask(__name__)
  
 #Add Database local
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:123456@localhost/proyectos"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqldb://root@127.0.0.1:3308/proyectos"
 
 #Database concectado a Amazon WS
 #app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://Alex:Admin1234@44.202.81.95/examen"
@@ -25,18 +25,13 @@ db =SQLAlchemy(app)
 #Create Model LIBROS
 class Autor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    codigo = db.Column(db.Integer, nullable=False)
     nombre = db.Column(db.String(100), nullable=False)
-    apellido = db.Column(db.String(100), nullable=False)
-    fechaNacimiento = db.Column(db.DateTime)
-    fechFallecimiento = db.Column(db.DateTime) 
-    lugarNacimiento = db.Column(db.String(100))
+    apellido = db.Column(db.String(100), nullable=False) 
+    regionNacimiento = db.Column(db.String(100))
     ranking= db.relationship('Ranking', backref='autor', lazy=True)
 
 class Libros(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    codigo = db.Column(db.Integer, nullable=False)
-    fechaPublicacion = db.Column(db.DateTime)
     genero = db.Column(db.String(100))
     titulo = db.Column(db.String(100))
     ranking= db.relationship('Ranking', backref='libros', lazy=True)
@@ -48,16 +43,11 @@ class Ranking(db.Model):
 
 #FORMULARIOS
 class AutorForm(FlaskForm):
-    codigoAutor =StringField('Codigo', validators=[DataRequired()])
     nombreAutor =StringField('Nombre', validators=[DataRequired()])
     apellidoAutor =StringField('Apellido', validators=[DataRequired()])
-    nacimientoAutor =DateField('Fecha de Nacimiento', validators=[DataRequired()])
-    fallecimientoAutor =DateField('Fecha de Fallecimiento')
-    lugarAutor =StringField('Lugar de Nacimiento', validators=[DataRequired()])
+    regionAutor =StringField('Lugar de Nacimiento', validators=[DataRequired()])
 
 class LibrosForm(FlaskForm):
-    codigoLibros =StringField('Codigo', validators=[DataRequired()])
-    fecPublicLibros=DateField('Fecha de Publicación', validators=[DataRequired()])
     generoLibros =StringField('Genero', validators=[DataRequired()])
     tituloLibros =StringField('Titulo', validators=[DataRequired()])
     
@@ -74,20 +64,17 @@ def insertar():
     autor = None
 
     if form_libros.validate_on_submit():
-        libros = Libros.query.filter_by(codigo = form_libros.codigoLibros.data).first()
+        libros = Libros.query.filter_by(id = form_libros.id.data).first()
         if libros is None:
-            libros = Libros(codigo = form_libros.codigoLibros.data, fechaPublicacion = form_libros.fecPublicLibros.data,
-            genero = form_libros.generoLibros.data, titulo = form_libros.tituloLibros.data)
+            libros = Libros(genero = form_libros.generoLibros.data, titulo = form_libros.tituloLibros.data)
             db.session.add(libros)
             db.session.commit()
     else: return render_template('insertar.html', form_autor=form_autor)
     
     if form_autor.validate_on_submit():
-        autor = Autor.query.filter_by(codigo = form_autor.codigoAutor.data).first()
+        autor = Autor.query.filter_by(id = form_autor.id.data).first()
         if autor is None:
-            autor = Autor(codigo = form_autor.codigoAutor.data, nombre = form_autor.nombreAutor.data, 
-            apellido = form_autor.apellidoAutor.data, fechaNacimiento = form_autor.nacimientoAutor.data,
-            fechFallecimiento = form_autor.fallecimientoAutor.data,lugarNacimiento = form_autor.lugarAutor.data)
+            autor = Autor(nombre = form_autor.nombreAutor.data, apellido = form_autor.apellidoAutor.data,regionNacimiento = form_autor.regionAutor.data)
             db.session.add(autor)
             db.session.commit()
         flash("Usuario añadido con exito")
