@@ -41,7 +41,7 @@ class Ranking(db.Model):
     autor_id=db.Column(db.Integer,db.ForeignKey('autor.id'),nullable=False)
     libros_id=db.Column(db.Integer,db.ForeignKey('libros.id'),nullable=False)
 
-#FORMULARIOS
+#FORMULARIOS 
 class AutorForm(FlaskForm):
     nombreAutor =StringField('Nombre', validators=[DataRequired()])
     apellidoAutor =StringField('Apellido', validators=[DataRequired()])
@@ -84,7 +84,7 @@ def insertar():
     db.session.add(Ranking(autor_id=autor_id))
     db.session.commit()
     return redirect(url_for('ranking'))
-    
+
 @app.route('/Libros')
 def libros():
     form_libros = LibrosForm()
