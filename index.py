@@ -56,6 +56,10 @@ class LibrosForm(FlaskForm):
 def nav():
     return render_template('nav.html')
 
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
 @app.route('/',methods=['GET','POST'])
 def index():
     return render_template('index.html')
