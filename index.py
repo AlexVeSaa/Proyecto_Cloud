@@ -52,6 +52,10 @@ class LibrosForm(FlaskForm):
     tituloLibros =StringField('Titulo', validators=[DataRequired()])
     
 
+@app.route('/nav')
+def nav():
+    return render_template('nav.html')
+
 @app.route('/',methods=['GET','POST'])
 def index():
     return render_template('index.html')
