@@ -1,5 +1,6 @@
 from calendar import c
 from re import A
+import time
 from flask import Flask, render_template, request,flash,redirect, url_for
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField,DateField
@@ -29,104 +30,118 @@ class Autor(db.Model):
     apellido = db.Column(db.String(100), nullable=False) 
     regionNacimiento = db.Column(db.String(100))
     ranking= db.relationship('Ranking', backref='autor', lazy=True)
+    def __init__(self,nombre,apellido,regionNacimiento):
+        self.nombre = nombre
+        self.apellido = apellido 
+        self.regionNacimiento = regionNacimiento
 
 class Libros(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     genero = db.Column(db.String(100))
     titulo = db.Column(db.String(100))
     ranking= db.relationship('Ranking', backref='libros', lazy=True)
+    def __init__(self, genero, titulo):
+        self.genero = genero
+        self.titulo = titulo
+
+class Condulta1 (db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    autor_c = db.Column(db.String(100))
+    libro_c = db.Column(db.String(100))
+    def __init__(self, autor_c, libro_c):
+        self.autor_c = autor_c
+        self.libro_c = libro_c
 
 class Ranking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    score = db.Column(db.Integer)
     autor_id=db.Column(db.Integer,db.ForeignKey('autor.id'),nullable=False)
     libros_id=db.Column(db.Integer,db.ForeignKey('libros.id'),nullable=False)
 
-#FORMULARIOS
-class AutorForm(FlaskForm):
-    nombreAutor =StringField('Nombre', validators=[DataRequired()])
-    apellidoAutor =StringField('Apellido', validators=[DataRequired()])
-    regionAutor =StringField('Lugar de Nacimiento', validators=[DataRequired()])
-
-class LibrosForm(FlaskForm):
-    generoLibros =StringField('Genero', validators=[DataRequired()])
-    tituloLibros =StringField('Titulo', validators=[DataRequired()])
-    
+    def __init__(self,score, autor_id, libros_id):
+        self.score = score
+        self.autor_id = autor_id
+        self.libros_id = libros_id
 
 @app.route('/',methods=['GET','POST'])
 def index():
     return render_template('index.html')
 
-@app.route('/insertar',methods=['GET','POST'])
-def insertar():
-    form_libros = LibrosForm()
-    form_autor = AutorForm()
-    libros = None
-    autor = None
-
-    if form_libros.validate_on_submit():
-        libros = Libros.query.filter_by(id = form_libros.id.data).first()
-        if libros is None:
-            libros = Libros(genero = form_libros.generoLibros.data, titulo = form_libros.tituloLibros.data)
-            db.session.add(libros)
-            db.session.commit()
-    else: return render_template('insertar.html', form_autor=form_autor)
-    
-    if form_autor.validate_on_submit():
-        autor = Autor.query.filter_by(id = form_autor.id.data).first()
-        if autor is None:
-            autor = Autor(nombre = form_autor.nombreAutor.data, apellido = form_autor.apellidoAutor.data,regionNacimiento = form_autor.regionAutor.data)
-            db.session.add(autor)
-            db.session.commit()
-        flash("Usuario añadido con exito")
-    else: return render_template('insertar.html',form_libros=form_libros)
-
-    autor_id = Autor.query.filter_by(codigo=autor.codigo).first().id
-    db.session.add(Ranking(autor_id=autor_id))
+@app.route('/Autor',methods=['GET','POST'])
+def AutorRegistro():
+    nombre = request.form["nombre"]
+    apellido = request.form["apellido"]
+    region = request.form["region"]
+    autor = Autor(nombre, apellido, region)    
+    db.session.add(autor)
     db.session.commit()
-    return redirect(url_for('ranking'))
+    return render_template('libros.html')
 
-@app.route('/Libros')
-def libros():
-    form_libros = LibrosForm()
-    libros = None
+@app.route('/Lib',methods=['GET','POST'])
 
-    if form_libros.validate_on_submit():
-        libros = Libros.query.filter_by(codigo = form_libros.codigoLibros.data).first()
-        if libros is None:
-            libros = Libros(codigo = form_libros.codigoLibros.data, fechaPublicacion = form_libros.fecPublicLibros.data,
-            genero = form_libros.generoLibros.data, titulo = form_libros.tituloLibros.data)
-            db.session.add(libros)
-            db.session.commit()
-    else: return render_template('libros.html',form_libros=form_libros)
-    libros_id = Libros.query.filter_by(codigo=libros.codigo).first().id
-    db.session.add(Ranking(libros_id=libros_id))
-    db.session.commit()
-    return redirect(url_for('ranking'))
+def lib():
+    return render_template('autor.html')
 
-@app.route('/Nosotros')
-def nosotros():
-    return render_template('users/Nosotros.html')
+@app.route('/Libros', methods=['GET','POST'])
+def LibrosRegistro():
+    lista = Autor.query.all()
+    consultas = Condulta1.query.all()
+    if request.method == 'POST':
+        genero = request.form["genero"]
+        titulo = request.form["titulo"]
+        libro = Libros(genero, titulo)   
+        db.session.add(libro)
+        db.session.commit()
 
-@app.route('/Contacto')
-def contacto():
-    return render_template('users/Contacto.html')
+        autor_id = request.form["autor_id"] 
+        libros = Libros.query.all()
+        for lib in libros:
+            if lib.titulo == titulo:
+                libros_id = lib.id
+
+        print(libros)
+        rank = Ranking(score=0, autor_id = autor_id, libros_id=libros_id)   
+        db.session.add(rank)
+        db.session.commit()
+
+        autor2 = Autor.query.get(autor_id)
+        autorn = autor2.nombre
+        consulta1 = Condulta1(autorn, titulo)
+        db.session.add(consulta1)
+        db.session.commit()
+
+        return render_template('ranking.html',consultas=consultas)
+    return render_template('libros.html',lista=lista)
 
 @app.route('/ranking')
 def ranking():
-    rankings=Ranking.query.order_by(Ranking.id)
-    lista=[]
-    for ranking in rankings:
-        autor = Autor.query.filter_by(id=ranking.autor_id).first()
-        libros = Libros.query.filter_by(id=ranking.libros_id).first()
+    consultas=Condulta1.query.all()
+    return render_template('ranking.html',consultas=consultas)
+
+@app.route('/Votar/<titulo>', methods=['POST'])
+def Votar(titulo):
+    libro = Libros.query.filter_by(titulo=titulo).first()
+    ranking = Ranking.query.filter_by(libros_id=libro.id).first()
+    ranking.score += 1
+    db.session.commit()
+    return redirect(url_for('Votados'))
+
+@app.route('/Votados')
+def Votados():
+    consultas=Condulta1.query.all()
+    votados = Ranking.query.order_by(Ranking.score.desc()).all()
+    lista = []
+    for votos in votados:
+        autor = Autor.query.filter_by(id=votos.autor_id ).first()
         lista.append({
-            "codigoAutor":autor.codigo,
-            "codigoLibros":libros.codigo
+            'score':votos.score,
+            'autor':autor.nombre
         })
-    return render_template('ranking.html',lista=lista)
+        
+    return render_template('votados.html', consultas=lista)
 
 with app.app_context():
     db.create_all()
-
 
 if __name__ == "__main__":
     app.run(debug=True)

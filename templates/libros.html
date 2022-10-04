@@ -10,42 +10,59 @@
 
 <body>
     <center>
-        <h1>DATOS DE TU AUTOR FAVORITO</h2>
+        <h1>DATOS DEL LIBRO</h2>
     </center>
-    <h2>LIBRO</h2>
-    <div class="row">
-        <div class="col">
-            <select class="form-control">
-                <option>
-                    {% for rangking in lista %}
-                    <option>{{ rangking.nombreAutor }}</option>
-                    {% endfor %}
-                </option>
-            </select>
+
+    <form method="POST" action="{{url_for('LibrosRegistro')}}" >   
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label>Autor del Libro</label>
+            <select class="form-control"  name="autor_id"  >
+                {% for LibrosRegistro in lista %}
+                    <option value="{{LibrosRegistro.id}}">{{LibrosRegistro.nombre}}</option>
+                {% endfor %}
+              </select>
         </div>
-        <div class="col">
-            {{form_libros.fecPublicLibros.label(class="form-label") }}
-            {{form_libros.fecPublicLibros(class = "form-control")}}
+        <div class="form-group col-md-6">
+            <label>Titulo: </label>
+            <input  class="form-control"  name="titulo" type="text" >
         </div>
     </div>
     <br />
+
     <div class="row">
         <div class="col">
-            {{form_libros.generoLibros.label(class="form-label") }}
-            {{form_libros.generoLibros(class = "form-control")}}
-        </div>
-        <div class="col">
-            {{form_libros.tituloLibros.label(class="form-label") }}
-            {{form_libros.tituloLibros(class = "form-control")}}
+            <label>Género</label>
+            <select class="col-sm-7  form-control " name="genero">
+                <option disabled selected >-Seleccionar-</option>
+                <option value="novela">Novela</option>
+                <option value="Leyenda">Leyenda</option>
+                <option value="Mito">Mito</option>
+                <option value="Fabula">Fabula</option>
+                <option value="Cantar">Cantar de Gesta</option>
+                <option value="Drama">Drama</option>
+                <option value="Terror">Terror y Thriller</option>
+                <option value="Fantasia">Fantasia</option>
+                <option value="Satira">Satira</option>
+                <option value="Elegia">Elegia</option>
+                <option value="Ensayo">Ensayo</option>
+                <option value="novelaGrafica">Novela Grafica</option>
+                <option value="Poesia">Poesia</option>
+                <option value="Novelahistorica">Novela Historica</option>
+                <option value="NovelaRomantica">Novela Romantica</option>
+                <option value="Autoayuda">Autoayuda</option>
+                <option value="Arte">Arte</option>
+                <option value="Bibiografia">Bibiografia</option>
+                <option value="Historia">Historia</option>
+                <option value="FiccionNarrativa">Ficcion Narrativa</option>
+            </select>
         </div>
     </div>
     <br>
     <input class="btn btn-primary" type="submit" value="AGREGAR">
     </form>
-    <br>
-    <br>
-    <br>
 </body>
+
 <footer>
 
 </footer>

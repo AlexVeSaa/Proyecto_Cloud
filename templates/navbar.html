@@ -1,5 +1,7 @@
+
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="{{url_for('insertar')}}">INSERTAR</a>
+    <a class="navbar-brand" href="{{url_for('index')}}">LIBROS</a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -8,22 +10,19 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="{{url_for('index')}}">LIBROS <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="{{url_for('lib')}}">Agregar Autor<span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{url_for('ranking')}}">RANKING AUTORES</a>
+          <a class="nav-link" href="{{url_for('LibrosRegistro')}}">Agregar Libros</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="{{url_for('libros')}}">LIBRO</a>
+          <a class="nav-link" href="{{url_for('ranking')}}">Votacion</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{url_for('Votados')}}">Ranking</a>
         </li>
 
-        <li class="nav-item">
-          <a class="nav-link" href="{{url_for('nosotros')}}">NOSOTROS</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{url_for('contacto')}}">CONTACTANOS</a>
-        </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
