@@ -58,7 +58,7 @@ def nav():
 
 @app.route('/login')
 def login():
-    return render_template('login.html')
+    return render_template('index1.html')
 
 @app.route('/',methods=['GET','POST'])
 def index():
