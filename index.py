@@ -1,6 +1,5 @@
 from calendar import c
 from re import A
-import time
 from flask import Flask, render_template, request,flash,redirect, url_for
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField,DateField
@@ -76,9 +75,8 @@ def AutorRegistro():
     db.session.add(autor)
     db.session.commit()
     return render_template('libros.html')
-
-@app.route('/Lib',methods=['GET','POST'])
-
+    
+@app.route('/Auto')
 def lib():
     return render_template('autor.html')
 
@@ -92,7 +90,7 @@ def LibrosRegistro():
         libro = Libros(genero, titulo)   
         db.session.add(libro)
         db.session.commit()
-
+        
         autor_id = request.form["autor_id"] 
         libros = Libros.query.all()
         for lib in libros:
@@ -109,7 +107,6 @@ def LibrosRegistro():
         consulta1 = Condulta1(autorn, titulo)
         db.session.add(consulta1)
         db.session.commit()
-
         return render_template('ranking.html',consultas=consultas)
     return render_template('libros.html',lista=lista)
 
@@ -137,7 +134,6 @@ def Votados():
             'score':votos.score,
             'autor':autor.nombre
         })
-        
     return render_template('votados.html', consultas=lista)
 
 with app.app_context():
