@@ -54,7 +54,7 @@ class LibrosForm(FlaskForm):
 
 @app.route('/nav')
 def nav():
-    return render_template('nav.html')
+    return render_template('prueba.html')
 
 @app.route('/login')
 def login():
